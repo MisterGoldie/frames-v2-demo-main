@@ -1,96 +1,45 @@
-import sdk from "@farcaster/frame-sdk";
-import { SwitchChainError, fromHex, getAddress, numberToHex } from "viem";
-import { ChainNotConfiguredError, createConnector } from "wagmi";
+import { getFrameMessage } from "frames.js";
+import { createPublicClient, http } from "viem";
+import { base } from "viem/chains";
+import { Config, createConfig, fallback, http as wagmiHttp } from "wagmi";
 
-frameConnector.type = "frameConnector" as const;
+const transport = http("https://base.publicnode.com");
 
-export function frameConnector() {
-  let connected = true;
+const publicClient = createPublicClient({
+  chain: base,
+  transport,
+});
 
-  return createConnector<typeof sdk.wallet.ethProvider>((config) => ({
-    id: "farcaster",
-    name: "Farcaster Wallet",
-    type: frameConnector.type,
+export const config: Config = createConfig({
+  chains: [base],
+  transports: {
+    [base.id]: fallback([wagmiHttp()]),
+  },
+});
 
-    async setup() {
-      this.connect({ chainId: config.chains[0].id });
-    },
-    async connect({ chainId } = {}) {
-      const provider = await this.getProvider();
-      const accounts = await provider.request({
-        method: "eth_requestAccounts",
-      });
+export type FrameMessage = ReturnType<typeof getFrameMessage>;
 
-      let currentChainId = await this.getChainId();
-      if (chainId && currentChainId !== chainId) {
-        const chain = await this.switchChain!({ chainId });
-        currentChainId = chain.id;
-      }
+export const validateFrameMessage = async (
+  message: FrameMessage
+): Promise<boolean> => {
+  try {
+    // Add your frame message validation logic here
+    return true;
+  } catch (e) {
+    console.error("Error validating frame message:", e);
+    return false;
+  }
+};
 
-      connected = true;
+export const isFrameMessage = (x: unknown): x is FrameMessage => {
+  return (
+    typeof x === "object" &&
+    x !== null &&
+    "untrustedData" in x &&
+    "trustedData" in x
+  );
+};
 
-      return {
-        accounts: accounts.map((x) => getAddress(x)),
-        chainId: currentChainId,
-      };
-    },
-    async disconnect() {
-      connected = false;
-    },
-    async getAccounts() {
-      if (!connected) throw new Error("Not connected");
-      const provider = await this.getProvider();
-      const accounts = await provider.request({
-        method: "eth_requestAccounts",
-      });
-      return accounts.map((x) => getAddress(x));
-    },
-    async getChainId() {
-      const provider = await this.getProvider();
-      const hexChainId = await provider.request({ method: "eth_chainId" });
-      return fromHex(hexChainId, "number");
-    },
-    async isAuthorized() {
-      if (!connected) {
-        return false;
-      }
-
-      const accounts = await this.getAccounts();
-      return !!accounts.length;
-    },
-    async switchChain({ chainId }) {
-      const provider = await this.getProvider();
-      const chain = config.chains.find((x) => x.id === chainId);
-      if (!chain) throw new SwitchChainError(new ChainNotConfiguredError());
-
-      await provider.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: numberToHex(chainId) }],
-      });
-
-      // explicitly emit this event as a workaround for ethereum provider not
-      // emitting events, can remove once events are flowing
-      config.emitter.emit("change", { chainId });
-
-      return chain;
-    },
-    onAccountsChanged(accounts) {
-      if (accounts.length === 0) this.onDisconnect();
-      else
-        config.emitter.emit("change", {
-          accounts: accounts.map((x) => getAddress(x)),
-        });
-    },
-    onChainChanged(chain) {
-      const chainId = Number(chain);
-      config.emitter.emit("change", { chainId });
-    },
-    async onDisconnect() {
-      config.emitter.emit("disconnect");
-      connected = false;
-    },
-    async getProvider() {
-      return sdk.wallet.ethProvider;
-    },
-  }));
-}
+export const isValidFrameMessage = async (x: unknown): Promise<boolean> => {
+  return isFrameMessage(x) && await validateFrameMessage(x);
+};

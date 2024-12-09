@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useCallback, useState } from "react";
-import sdk, {
-  FrameNotificationDetails,
-  type FrameContext,
-} from "@farcaster/frame-sdk";
+import { getFrameMessage } from "frames.js";
+import type { FrameMessage } from "~/lib/connector";
 import {
   useAccount,
   useSendTransaction,
@@ -26,12 +24,12 @@ export default function Demo(
   { title }: { title?: string } = { title: "Frames v2 Demo" }
 ) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
-  const [context, setContext] = useState<FrameContext>();
+  const [context, setContext] = useState<FrameRequest>();
   const [isContextOpen, setIsContextOpen] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [addFrameResult, setAddFrameResult] = useState("");
   const [notificationDetails, setNotificationDetails] =
-    useState<FrameNotificationDetails | null>(null);
+    useState<FrameRequest | null>(null);
   const [sendNotificationResult, setSendNotificationResult] = useState("");
 
   const { address, isConnected } = useAccount();
@@ -61,25 +59,25 @@ export default function Demo(
 
   useEffect(() => {
     const load = async () => {
-      setContext(await sdk.context);
-      sdk.actions.ready();
+      setContext(await FrameRequest.context);
+      FrameRequest.actions.ready();
     };
-    if (sdk && !isSDKLoaded) {
+    if (FrameRequest && !isSDKLoaded) {
       setIsSDKLoaded(true);
       load();
     }
   }, [isSDKLoaded]);
 
   const openUrl = useCallback(() => {
-    sdk.actions.openUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    FrameRequest.actions.openUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
   }, []);
 
   const openWarpcastUrl = useCallback(() => {
-    sdk.actions.openUrl("https://warpcast.com/~/compose");
+    FrameRequest.actions.openUrl("https://warpcast.com/~/compose");
   }, []);
 
   const close = useCallback(() => {
-    sdk.actions.close();
+    FrameRequest.actions.close();
   }, []);
 
   const addFrame = useCallback(async () => {
@@ -87,7 +85,7 @@ export default function Demo(
       // setAddFrameResult("");
       setNotificationDetails(null);
 
-      const result = await sdk.actions.addFrame();
+      const result = await FrameRequest.actions.addFrame();
 
       if (result.added) {
         if (result.notificationDetails) {
@@ -215,7 +213,7 @@ export default function Demo(
         <div className="mb-4">
           <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
             <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
-              sdk.actions.openUrl
+              FrameRequest.actions.openUrl
             </pre>
           </div>
           <Button onClick={openUrl}>Open Link</Button>
@@ -224,7 +222,7 @@ export default function Demo(
         <div className="mb-4">
           <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
             <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
-              sdk.actions.openUrl
+              FrameRequest.actions.openUrl
             </pre>
           </div>
           <Button onClick={openWarpcastUrl}>Open Warpcast Link</Button>
@@ -233,7 +231,7 @@ export default function Demo(
         <div className="mb-4">
           <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
             <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
-              sdk.actions.close
+              FrameRequest.actions.close
             </pre>
           </div>
           <Button onClick={close}>Close Frame</Button>
@@ -242,7 +240,7 @@ export default function Demo(
         <div className="mb-4">
           <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
             <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
-              sdk.actions.addFrame
+              FrameRequest.actions.addFrame
             </pre>
           </div>
           {addFrameResult && (
