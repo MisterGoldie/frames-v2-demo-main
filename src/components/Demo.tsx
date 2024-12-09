@@ -2,6 +2,7 @@
 
 import { useEffect, useCallback, useState } from "react";
 import { getFrameMessage } from "frames.js";
+import { FrameRequest } from "@farcaster/frame-sdk";
 import type { FrameMessage } from "~/lib/connector";
 import {
   useAccount,

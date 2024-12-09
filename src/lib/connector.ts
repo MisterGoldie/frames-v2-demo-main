@@ -1,7 +1,7 @@
-import { getFrameMessage } from "frames.js";
+import { FrameRequest } from "@farcaster/frame-sdk";
 import { createPublicClient, http } from "viem";
 import { base } from "viem/chains";
-import { Config, createConfig, fallback, http as wagmiHttp } from "wagmi";
+import { Config, createConfig, fallback, http as wagmiHttp, createConnector } from "wagmi";
 
 const transport = http("https://base.publicnode.com");
 
@@ -10,14 +10,49 @@ const publicClient = createPublicClient({
   transport,
 });
 
+export const frameConnector = () => 
+  createConnector((config) => ({
+    id: 'frame',
+    name: 'Frame',
+    type: 'frame' as const,
+    async connect({ chainId } = {}) {
+      const chain = chainId ?? config.chains[0].id;
+      return {
+        accounts: ['0x0000000000000000000000000000000000000000'] as const,
+        chainId: chain
+      };
+    },
+    async disconnect() {},
+    async getAccounts() {
+      return ['0x0000000000000000000000000000000000000000'] as const;
+    },
+    async getChainId() {
+      return config.chains[0].id;
+    },
+    async isAuthorized() {
+      return false;
+    },
+    async getProvider({ chainId }: { chainId?: number } = {}) {
+      const chain = chainId ?? config.chains[0].id;
+      return createPublicClient({
+        chain: { ...base, id: chain },
+        transport: http()
+      });
+    },
+    onAccountsChanged() {},
+    onChainChanged() {},
+    onDisconnect() {}
+  }));
+
 export const config: Config = createConfig({
   chains: [base],
   transports: {
     [base.id]: fallback([wagmiHttp()]),
   },
+  connectors: [frameConnector()]
 });
 
-export type FrameMessage = ReturnType<typeof getFrameMessage>;
+export type FrameMessage = ReturnType<typeof FrameRequest>;
 
 export const validateFrameMessage = async (
   message: FrameMessage

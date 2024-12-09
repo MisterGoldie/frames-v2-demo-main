@@ -1,6 +1,18 @@
 import { getFrameMessage } from "frames.js";
 import type { FrameMessage } from "~/lib/connector";
 import { NextRequest } from "next/server";
+import { z } from "zod";
+
+const FrameRequest = z.object({
+  header: z.string(),
+  payload: z.string(),
+  event: z.enum(["frame-added", "frame-removed", "notifications-enabled", "notifications-disabled"]),
+  notificationDetails: z.object({
+    token: z.string(),
+    url: z.string()
+  }).optional(),
+  fid: z.number()
+});
 
 export async function POST(request: NextRequest) {
   const requestJson = await request.json();
@@ -54,10 +66,8 @@ export async function POST(request: NextRequest) {
     case "notifications-enabled":
       console.log(
         `Got notifications-enabled event for fid ${fid} with token ${
-          payload.data.notificationDetails.token
-        } and url ${payload.data.notificationDetails.url} ${JSON.stringify(
-          payload.data
-        )}`
+          payload.data.notificationDetails?.token
+        } and url ${payload.data.notificationDetails?.url}`
       );
       break;
     case "notifications-disabled":
