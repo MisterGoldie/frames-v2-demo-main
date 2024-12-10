@@ -13,17 +13,24 @@ export const metadata: Metadata = {
       imageUrl: `${appUrl}/splash.png`,
       buttons: [
         {
-          label: "Launch Demo",
+          label: "Open YouTube",
           action: {
-            type: "post",
-            url: `${appUrl}/api/frame`
+            type: "post_redirect",
+            url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
           }
         },
         {
-          label: "About",
+          label: "Open Warpcast",
+          action: {
+            type: "post_redirect",
+            url: "https://warpcast.com/~/compose"
+          }
+        },
+        {
+          label: "Add Frame",
           action: {
             type: "post",
-            url: `${appUrl}/api/frame/about`
+            url: `${appUrl}/api/frame/add`
           }
         }
       ]
