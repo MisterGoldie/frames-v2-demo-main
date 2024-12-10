@@ -7,8 +7,14 @@ const initialState: GameState = {
   board: Array(9).fill(null),
   currentPlayer: 'X',
   winner: null,
-  moveCount: 0
+  moveCount: 0,
+  gameStarted: false
 };
+
+interface Button {
+  label: string;
+  action: string;
+}
 
 function checkWinner(board: (CellValue)[]): CellValue | 'draw' | null {
   const lines = [
@@ -27,48 +33,47 @@ function checkWinner(board: (CellValue)[]): CellValue | 'draw' | null {
 
 export async function POST(req: NextRequest) {
   const data = await req.json() as FrameData;
-  const { gameState, buttonIndex = 0, fid } = data;
+  const { gameState, buttonIndex = 0 } = data;
 
   let newState = gameState || initialState;
-  let buttons = [];
+  let buttons: Button[] = [];
 
-  if (buttonIndex === 1) { // Reset game
-    newState = initialState;
-  } else if (!newState.winner && buttonIndex > 1) { // Make move
-    const position = buttonIndex - 2; // Adjust for our button layout
-    if (position >= 0 && position < 9 && !newState.board[position]) {
-      const newBoard = [...newState.board];
-      newBoard[position] = newState.currentPlayer;
-      
-      const winner = checkWinner(newBoard);
-      const moveCount = newState.moveCount + 1;
-
-      newState = {
-        board: newBoard,
-        currentPlayer: newState.currentPlayer === 'X' ? 'O' : 'X',
-        winner: moveCount === 9 && !winner ? 'draw' : winner,
-        moveCount
-      };
-    }
-  }
-
-  // Generate buttons based on game state
-  if (newState.winner) {
-    buttons = [{
-      label: "Play Again",
-      action: "post"
-    }];
-  } else {
+  if (!newState.gameStarted && buttonIndex === 0) {
+    newState = { ...initialState, gameStarted: true };
     buttons = [
       {
         label: "Reset Game",
         action: "post"
       },
-      ...newState.board.map((cell, index) => ({
-        label: cell || `${index + 1}`,
+      ...Array(9).fill(null).map((_, index) => ({
+        label: `${index + 1}`,
         action: "post"
       }))
     ];
+  } else if (newState.gameStarted) {
+    if (buttonIndex === 1) {
+      newState = initialState;
+      buttons = [{
+        label: "Start New Game",
+        action: "post"
+      }];
+    } else if (!newState.winner && buttonIndex > 1) {
+      const position = buttonIndex - 2;
+      if (position >= 0 && position < 9 && !newState.board[position]) {
+        const newBoard = [...newState.board];
+        newBoard[position] = newState.currentPlayer;
+        
+        const winner = checkWinner(newBoard);
+        const moveCount = newState.moveCount + 1;
+
+        newState = {
+          board: newBoard,
+          currentPlayer: newState.currentPlayer === 'X' ? 'O' : 'X',
+          winner: moveCount === 9 && !winner ? 'draw' : winner,
+          moveCount
+        };
+      }
+    }
   }
 
   return new Response(

@@ -8,6 +8,31 @@ export async function GET(req: Request) {
   const stateParam = searchParams.get("state");
   const state: GameState = stateParam ? JSON.parse(decodeURIComponent(stateParam)) : null;
 
+  if (!state?.gameStarted) {
+    return new ImageResponse(
+      (
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          height: "100%",
+          backgroundColor: "#1a1a1a",
+          color: "white",
+          padding: "40px",
+        }}>
+          <h1 style={{ fontSize: "48px", marginBottom: "20px" }}>Tic-Tac-Toe</h1>
+          <p style={{ fontSize: "24px" }}>Click to Start Game</p>
+        </div>
+      ),
+      {
+        width: 600,
+        height: 400,
+      }
+    );
+  }
+
   return new ImageResponse(
     (
       <div
