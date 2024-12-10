@@ -29,7 +29,7 @@ export default function TicTacToe() {
   useEffect(() => {
     const load = async () => {
       setContext(await sdk.context);
-      sdk.actions.ready();
+      sdk.actions.ready({});
     };
     if (sdk && !isSDKLoaded) {
       setIsSDKLoaded(true);

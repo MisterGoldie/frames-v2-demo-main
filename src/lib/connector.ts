@@ -1,7 +1,12 @@
-import sdk from "@farcaster/frame-sdk";
+import sdk, { type FrameContext } from "@farcaster/frame-sdk";
 import { createPublicClient, http } from "viem";
 import { base } from "viem/chains";
 import { Config, createConfig, fallback, http as wagmiHttp, createConnector } from "wagmi";
+
+// Extend FrameContext to include fid
+interface ExtendedFrameContext extends FrameContext {
+  fid?: number;
+}
 
 const transport = http("https://base.publicnode.com");
 
@@ -30,7 +35,13 @@ export const frameConnector = () =>
       return config.chains[0].id;
     },
     async isAuthorized() {
-      return false;
+      try {
+        const context = await sdk.context as ExtendedFrameContext;
+        return !!context && !!context.fid;
+      } catch (error) {
+        console.error('Frame authorization error:', error);
+        return false;
+      }
     },
     async getProvider({ chainId }: { chainId?: number } = {}) {
       const chain = chainId ?? config.chains[0].id;

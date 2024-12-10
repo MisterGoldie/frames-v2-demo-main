@@ -31,6 +31,21 @@ export const metadata: Metadata = {
   },
 };
 
+const MenuBoard = dynamic(() => import('~/components/MenuBoard'), { ssr: false });
+
 export default function TicTacToePage() {
-  return <TicTacToe />;
+  const handleStartGame = (
+    difficulty: 'easy' | 'medium' | 'hard',
+    piece: 'X' | 'O'
+  ) => {
+    console.log(`Starting game with difficulty: ${difficulty}, piece: ${piece}`);
+  };
+
+  return (
+    <MenuBoard 
+      onStartGame={handleStartGame} 
+      isMuted={false} 
+      toggleMute={() => {}} 
+    />
+  );
 } 

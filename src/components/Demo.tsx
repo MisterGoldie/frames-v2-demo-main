@@ -4,16 +4,25 @@ import { useEffect, useCallback, useState } from "react";
 import sdk, { type FrameContext } from "@farcaster/frame-sdk";
 import { Button } from "~/components/ui/Button";
 
-export default function Demo({ title }: { title?: string } = { title: "Frames v2 Demo" }) {
+interface DemoProps {
+  title?: string;
+}
+
+export default function Demo({ title = "Frames v2 Demo" }: DemoProps) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
-  const [context, setContext] = useState<FrameContext>();
+  const [context, setContext] = useState<FrameContext | undefined>();
   const [isContextOpen, setIsContextOpen] = useState(false);
 
   useEffect(() => {
     const load = async () => {
-      setContext(await sdk.context);
-      sdk.actions.ready();
+      try {
+        setContext(await sdk.context);
+        sdk.actions.ready({});
+      } catch (error) {
+        console.error('Failed to load SDK context:', error);
+      }
     };
+
     if (sdk && !isSDKLoaded) {
       setIsSDKLoaded(true);
       load();
@@ -26,10 +35,6 @@ export default function Demo({ title }: { title?: string } = { title: "Frames v2
 
   const openUrl = useCallback(() => {
     sdk.actions.openUrl("https://podplayv2.vercel.app");
-  }, []);
-
-  const openWarpcastUrl = useCallback(() => {
-    sdk.actions.openUrl("https://warpcast.com/~/compose");
   }, []);
 
   const close = useCallback(() => {
@@ -48,7 +53,7 @@ export default function Demo({ title }: { title?: string } = { title: "Frames v2
         <h2 className="font-2xl font-bold">Context</h2>
         <button
           onClick={toggleContext}
-          className="flex items-center gap-2 transition-colors"
+          className="flex items-center gap-2 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
         >
           <span
             className={`transform transition-transform ${
@@ -62,7 +67,7 @@ export default function Demo({ title }: { title?: string } = { title: "Frames v2
 
         {isContextOpen && (
           <div className="p-4 mt-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
-            <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
+            <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-auto">
               {JSON.stringify(context, null, 2)}
             </pre>
           </div>
@@ -74,7 +79,7 @@ export default function Demo({ title }: { title?: string } = { title: "Frames v2
 
         <div className="mb-4">
           <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
-            <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
+            <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-auto">
               sdk.actions.openUrl
             </pre>
           </div>
@@ -83,7 +88,7 @@ export default function Demo({ title }: { title?: string } = { title: "Frames v2
 
         <div className="mb-4">
           <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
-            <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
+            <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-auto">
               sdk.actions.close
             </pre>
           </div>
