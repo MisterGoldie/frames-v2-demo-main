@@ -9,28 +9,16 @@ export const metadata: Metadata = {
   description: "A Farcaster Frames v2 demo app",
   other: {
     'fc:frame': JSON.stringify({
-      version: 'next',
-      imageUrl: `${appUrl}/splash.png`,
+      version: "vNext",
+      image: `${appUrl}/game-board.png`,
       buttons: [
         {
-          label: "Play game",
+          label: "Launch Frame",
           action: {
-            type: "post_redirect",
-            url: "https://podplayv2demo.vercel.app/"
-          }
-        },
-        {
-          label: "Open Warpcast",
-          action: {
-            type: "post_redirect",
-            url: "https://warpcast.com/~/compose"
-          }
-        },
-        {
-          label: "Add Frame",
-          action: {
-            type: "post",
-            url: `${appUrl}/api/frame/add`
+            type: "launch_frame",
+            url: `${appUrl}`,
+            splashImageUrl: `${appUrl}/splash.png`,
+            splashBackgroundColor: "#f7f7f7",
           }
         }
       ]
