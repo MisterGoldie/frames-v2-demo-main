@@ -25,7 +25,7 @@ export default function Demo({ title }: { title?: string } = { title: "Frames v2
   }, []);
 
   const openUrl = useCallback(() => {
-    sdk.actions.openUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    sdk.actions.openUrl("https://podplayv2.vercel.app");
   }, []);
 
   const openWarpcastUrl = useCallback(() => {
