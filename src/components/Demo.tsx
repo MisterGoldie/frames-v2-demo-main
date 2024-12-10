@@ -18,7 +18,6 @@ import { config } from "~/components/providers/WagmiProvider";
 import { Button } from "~/components/ui/Button";
 import { truncateAddress } from "~/lib/truncateAddress";
 import { base } from "wagmi/chains";
-import { sdk } from "@farcaster/frame-sdk";
 
 // Define the FrameRequest interface
 interface FrameRequest {
@@ -103,7 +102,7 @@ export default function Demo(
   }, [isSDKLoaded]);
 
   const openUrl = useCallback(() => {
-    sdk.actions.openUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    (window as any).FrameRequest.actions.openUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
   }, []);
 
   const openWarpcastUrl = useCallback(() => {
@@ -111,7 +110,7 @@ export default function Demo(
   }, []);
 
   const close = useCallback(() => {
-    sdk.actions.close();
+    (window as any).FrameRequest.actions.close();
   }, []);
 
   const addFrame = useCallback(async () => {
