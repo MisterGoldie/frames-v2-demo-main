@@ -53,7 +53,7 @@ type FrameContext = {
 };
 
 export default function Demo(
-  { title }: { title?: string } = { title: "Frames v2 Demo" }
+  { title }: { title?: string } = { title: "POD Play v2" }
 ) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<FrameContext>();
@@ -102,7 +102,7 @@ export default function Demo(
   }, [isSDKLoaded]);
 
   const openUrl = useCallback(() => {
-    (window as any).FrameRequest.actions.openUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    (window as any).FrameRequest.actions.openUrl("https://podplayv2.vercel.app");
   }, []);
 
   const openWarpcastUrl = useCallback(() => {
@@ -170,7 +170,7 @@ export default function Demo(
   const sendTx = useCallback(() => {
     sendTransaction(
       {
-        to: "0x4bBFD120d9f352A0BEd7a014bd67913a2007a878",
+        to: "0xB57381C7eD83BB9031a786d2C691cc6C7C2207a4",
         data: "0x9846cd9efc000023c0",
       },
       {
@@ -465,7 +465,7 @@ function SendEth() {
   const handleSend = useCallback(() => {
     sendTransaction(
       {
-        to: "0x4bBFD120d9f352A0BEd7a014bd67913a2007a878",
+        to: "0xB57381C7eD83BB9031a786d2C691cc6C7C2207a4",
         value: 1n,
       }
     );

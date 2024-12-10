@@ -5,7 +5,7 @@ import { Providers } from "~/app/providers";
 const appUrl = process.env.NEXT_PUBLIC_URL;
 
 export const metadata: Metadata = {
-  title: "Farcaster Frames v2 Demo",
+  title: "POD Play v2",
   description: "A Farcaster Frames v2 demo app",
   other: {
     'fc:frame': JSON.stringify({
@@ -13,10 +13,10 @@ export const metadata: Metadata = {
       imageUrl: `${appUrl}/splash.png`,
       buttons: [
         {
-          label: "Open YouTube",
+          label: "Play game",
           action: {
             type: "post_redirect",
-            url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            url: "https://podplayv2.vercel.app"
           }
         },
         {

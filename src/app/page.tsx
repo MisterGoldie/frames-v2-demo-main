@@ -10,7 +10,7 @@ const frame = {
     title: "Launch Frame",
     action: {
       type: "launch_frame",
-      name: "Farcaster Frames v2 Demo",
+      name: "POD Play v2",
       url: appUrl,
       splashImageUrl: `${appUrl}/splash.png`,
       splashBackgroundColor: "#f7f7f7",
@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "POD Play v2",
     openGraph: {
       title: "POD Play v2",
-      description: "A Farcaster Frames v2 demo app.",
+      description: "Our POD Play demo",
     },
     other: {
       "fc:frame": JSON.stringify(frame),
