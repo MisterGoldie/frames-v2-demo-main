@@ -37,6 +37,23 @@ export default function TicTacToe() {
     }
   }, [isSDKLoaded]);
 
+  const startGame = useCallback(() => {
+    fetch(`${process.env.NEXT_PUBLIC_URL}/api/frame/tictactoe`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ gameState: initialState }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      setGameState(data.state);
+    })
+    .catch(error => {
+      console.error('Error starting game:', error);
+    });
+  }, []);
+
   const makeMove = useCallback((position: number) => {
     setGameState(prev => {
       if (prev.board[position] || prev.winner) return prev;
@@ -68,6 +85,12 @@ export default function TicTacToe() {
     <div className="w-[300px] mx-auto py-4 px-2">
       <h1 className="text-2xl font-bold text-center mb-4">Tic Tac Toe</h1>
       
+      <div className="mb-4">
+        <Button onClick={startGame} className="w-full mb-4">
+          Start New Game
+        </Button>
+      </div>
+
       <div className="grid grid-cols-3 gap-2 mb-4">
         {gameState.board.map((cell, index) => (
           <div 
