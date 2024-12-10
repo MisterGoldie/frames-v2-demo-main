@@ -19,44 +19,39 @@ export async function GET(req: Request) {
           width: "100%",
           height: "100%",
           backgroundColor: "#1a1a1a",
-          color: "white",
-          padding: "40px",
+          color: "#ffffff",
+          fontFamily: "sans-serif",
+          padding: "20px",
         }}
       >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "10px",
-            width: "300px",
-            height: "300px",
-          }}
-        >
+        <h1 style={{ fontSize: "32px", marginBottom: "20px" }}>
+          POD Play Tic-Tac-Toe
+        </h1>
+        
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "10px",
+          width: "300px",
+          marginBottom: "20px"
+        }}>
           {state?.board.map((cell, i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "#333",
-                fontSize: "48px",
-                fontWeight: "bold",
-                border: "2px solid #7C65C1",
-                borderRadius: "8px",
-              }}
-            >
+            <div key={i} style={{
+              width: "100px",
+              height: "100px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "48px",
+              border: "2px solid #7C65C1",
+              borderRadius: "8px",
+            }}>
               {cell || ""}
             </div>
           ))}
         </div>
-        <div
-          style={{
-            marginTop: "20px",
-            fontSize: "24px",
-            fontWeight: "bold",
-          }}
-        >
+
+        <div style={{ fontSize: "24px", textAlign: "center" }}>
           {state?.winner
             ? state.winner === "draw"
               ? "It's a draw!"
@@ -66,8 +61,8 @@ export async function GET(req: Request) {
       </div>
     ),
     {
-      width: 400,
-      height: 500,
+      width: 600,
+      height: 600,
     }
   );
 } 
