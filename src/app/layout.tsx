@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   other: {
     'fc:frame': JSON.stringify({
       version: 'next',
-      imageUrl: `${appUrl}/splash.png`,
+      imageUrl: `${appUrl}/icon.png`,
       buttons: [
         {
           label: "Play game",
