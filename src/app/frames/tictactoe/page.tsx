@@ -7,9 +7,9 @@ const TicTacToe = dynamic(() => import("~/components/TicTacToe"), {
   ssr: false,
 });
 
-const frame = {
+const frameEmbed = {
   version: "next",
-  imageUrl: `${appUrl}/game-board.png`,
+  imageUrl: `${appUrl}/api/frame/tictactoe/image`,
   button: {
     title: "Play Tic-Tac-Toe",
     action: {
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     description: "Play Tic-Tac-Toe in a Farcaster Frame",
   },
   other: {
-    "fc:frame": JSON.stringify(frame),
+    "fc:frame": JSON.stringify(frameEmbed),
   },
 };
 

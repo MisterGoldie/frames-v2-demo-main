@@ -5,17 +5,17 @@ const appUrl = process.env.NEXT_PUBLIC_URL;
 
 const frame = {
   version: "next",
-  imageUrl: `${appUrl}/game-board.png`,
+  imageUrl: `${appUrl}/opengraph-image`,
   button: {
-    title: "Play Tic-Tac-Toe",
+    title: "Launch Frame",
     action: {
       type: "launch_frame",
-      name: "POD Play Tic-Tac-Toe",
-      url: `${appUrl}/frames/tictactoe`,
-      splashImageUrl: `${appUrl}/game-board.png`,
-      splashBackgroundColor: "#1a1a1a"
-    }
-  }
+      name: "POD Play v2",
+      url: appUrl,
+      splashImageUrl: `${appUrl}/splash.png`,
+      splashBackgroundColor: "#f7f7f7",
+    },
+  },
 };
 
 export const revalidate = 300;
@@ -36,4 +36,4 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Home() {
   return (<App />);
 }
-////
+//
