@@ -9,19 +9,18 @@ export const metadata: Metadata = {
   description: "A Farcaster Frames v2 demo app",
   other: {
     'fc:frame': JSON.stringify({
-      version: "vNext",
-      image: `${appUrl}/game-board.png`,
-      buttons: [
-        {
-          label: "Launch Frame",
-          action: {
-            type: "launch_frame",
-            url: `${appUrl}`,
-            splashImageUrl: `${appUrl}/splash.png`,
-            splashBackgroundColor: "#f7f7f7",
-          }
+      version: "next",
+      imageUrl: `${appUrl}/opengraph-image`,
+      button: {
+        title: "Launch POD Play",
+        action: {
+          type: "launch_frame",
+          name: "POD Play v2",
+          url: `${appUrl}`,
+          splashImageUrl: `${appUrl}/splash.png`,
+          splashBackgroundColor: "#f7f7f7"
         }
-      ]
+      }
     })
   }
 };
