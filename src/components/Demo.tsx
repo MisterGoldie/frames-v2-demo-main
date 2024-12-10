@@ -2,8 +2,6 @@
 
 import { useEffect, useCallback, useState } from "react";
 import { getFrameMessage } from "frames.js";
-import { FrameRequest } from "@farcaster/frame-sdk";
-import type { FrameMessage } from "~/lib/connector";
 import {
   useAccount,
   useSendTransaction,
@@ -21,16 +19,49 @@ import { Button } from "~/components/ui/Button";
 import { truncateAddress } from "~/lib/truncateAddress";
 import { base } from "wagmi/chains";
 
+// Define the FrameRequest interface
+interface FrameRequest {
+  context: any;
+  actions: {
+    ready: () => void;
+    openUrl: (url: string) => void;
+    close: () => void;
+    addFrame: () => Promise<{
+      added: boolean;
+      notificationDetails?: {
+        token: string;
+        url: string;
+      };
+      reason?: string;
+    }>;
+  };
+}
+
+type FrameContext = {
+  [x: string]: any;
+  fid: number;
+  url: string;
+  messageHash: string;
+  timestamp: number;
+  network: number;
+  buttonIndex: number;
+  inputText: string;
+  castId: {
+    fid: number;
+    hash: string;
+  };
+};
+
 export default function Demo(
   { title }: { title?: string } = { title: "Frames v2 Demo" }
 ) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
-  const [context, setContext] = useState<FrameRequest>();
+  const [context, setContext] = useState<FrameContext>();
   const [isContextOpen, setIsContextOpen] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [addFrameResult, setAddFrameResult] = useState("");
   const [notificationDetails, setNotificationDetails] =
-    useState<FrameRequest | null>(null);
+    useState<FrameContext | null>(null);
   const [sendNotificationResult, setSendNotificationResult] = useState("");
 
   const { address, isConnected } = useAccount();
@@ -60,25 +91,26 @@ export default function Demo(
 
   useEffect(() => {
     const load = async () => {
-      setContext(await FrameRequest.context);
-      FrameRequest.actions.ready();
+      const ctx = await (window as any).FrameRequest.context;
+      setContext(ctx as FrameContext);
+      (window as any).FrameRequest.actions.ready();
     };
-    if (FrameRequest && !isSDKLoaded) {
+    if ((window as any).FrameRequest && !isSDKLoaded) {
       setIsSDKLoaded(true);
       load();
     }
   }, [isSDKLoaded]);
 
   const openUrl = useCallback(() => {
-    FrameRequest.actions.openUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    (window as any).FrameRequest.actions.openUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
   }, []);
 
   const openWarpcastUrl = useCallback(() => {
-    FrameRequest.actions.openUrl("https://warpcast.com/~/compose");
+    (window as any).FrameRequest.actions.openUrl("https://warpcast.com/~/compose");
   }, []);
 
   const close = useCallback(() => {
-    FrameRequest.actions.close();
+    (window as any).FrameRequest.actions.close();
   }, []);
 
   const addFrame = useCallback(async () => {
@@ -86,7 +118,7 @@ export default function Demo(
       // setAddFrameResult("");
       setNotificationDetails(null);
 
-      const result = await FrameRequest.actions.addFrame();
+      const result = await (window as any).FrameRequest.actions.addFrame();
 
       if (result.added) {
         if (result.notificationDetails) {

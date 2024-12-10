@@ -1,4 +1,4 @@
-import { FrameRequest } from "@farcaster/frame-sdk";
+import sdk from "@farcaster/frame-sdk";
 import { createPublicClient, http } from "viem";
 import { base } from "viem/chains";
 import { Config, createConfig, fallback, http as wagmiHttp, createConnector } from "wagmi";
@@ -24,7 +24,7 @@ export const frameConnector = () =>
     },
     async disconnect() {},
     async getAccounts() {
-      return ['0x0000000000000000000000000000000000000000'] as const;
+      return ['0x0000000000000000000000000000000000000000'] as const; 
     },
     async getChainId() {
       return config.chains[0].id;
@@ -52,7 +52,10 @@ export const config: Config = createConfig({
   connectors: [frameConnector()]
 });
 
-export type FrameMessage = ReturnType<typeof FrameRequest>;
+export type FrameMessage = {
+  untrustedData: any;
+  trustedData: any;
+};
 
 export const validateFrameMessage = async (
   message: FrameMessage

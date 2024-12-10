@@ -64,11 +64,17 @@ export async function POST(request: NextRequest) {
       console.log(`Got frame-removed event for fid ${fid}`);
       break;
     case "notifications-enabled":
-      console.log(
-        `Got notifications-enabled event for fid ${fid} with token ${
-          payload.data.notificationDetails?.token
-        } and url ${payload.data.notificationDetails?.url}`
-      );
+      if (payload.data.notificationDetails) {
+        console.log(
+          `Got notifications-enabled event for fid ${fid} with token ${
+            payload.data.notificationDetails.token
+          } and url ${payload.data.notificationDetails.url} ${JSON.stringify(
+            payload.data
+          )}`
+        );
+      } else {
+        console.log(`Got notifications-enabled event for fid ${fid} with no notification details`);
+      }
       break;
     case "notifications-disabled":
       console.log(`Got notifications-disabled event for fid ${fid}`);
