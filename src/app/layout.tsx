@@ -16,7 +16,7 @@ export const metadata: Metadata = {
           label: "Play game",
           action: {
             type: "post_redirect",
-            url: "https://podplayv2demo.vercel.app/"
+            url: "https://podplayv2.vercel.app"
           }
         },
         {
