@@ -33,7 +33,6 @@ function MenuBoard({ onStartGame, isMuted, toggleMute }: MenuBoardProps) {
         >
           Main Menu
         </Text>
-        {/* Add more 3D elements here */}
       </Canvas>
       <div className="absolute bottom-4 flex justify-between w-full px-8">
         <button onClick={toggleMute} className="bg-green-600 text-white px-4 py-2 rounded">
