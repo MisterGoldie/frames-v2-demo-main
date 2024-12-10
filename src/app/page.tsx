@@ -22,9 +22,9 @@ export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Farcaster Frames v2 Demo",
+    title: "POD Play v2",
     openGraph: {
-      title: "Farcaster Frames v2 Demo",
+      title: "POD Play v2",
       description: "A Farcaster Frames v2 demo app.",
     },
     other: {

@@ -184,7 +184,7 @@ export default function Demo(
   const signTyped = useCallback(() => {
     signTypedData({
       domain: {
-        name: "Frames v2 Demo",
+        name: "POD Play v2",
         version: "1",
         chainId: 8453,
       },
