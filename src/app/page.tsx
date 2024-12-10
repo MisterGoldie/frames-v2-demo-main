@@ -1,39 +1,16 @@
-import { Metadata } from "next";
-import App from "./app";
+"use client";
 
-const appUrl = process.env.NEXT_PUBLIC_URL;
+import dynamic from "next/dynamic";
 
-const frame = {
-  version: "next",
-  imageUrl: `${appUrl}/opengraph-image`,
-  button: {
-    title: "Launch Frame",
-    action: {
-      type: "launch_frame",
-      name: "POD Play v2",
-      url: appUrl,
-      splashImageUrl: `${appUrl}/splash.png`,
-      splashBackgroundColor: "#f7f7f7",
-    },
-  },
-};
-
-export const revalidate = 300;
-
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "POD Play v2",
-    openGraph: {
-      title: "POD Play v2",
-      description: "Our POD Play demo",
-    },
-    other: {
-      "fc:frame": JSON.stringify(frame),
-    },
-  };
-}
+const TicTacToe = dynamic(() => import("~/components/TicTacToe"), {
+  ssr: false,
+});
 
 export default function Home() {
-  return (<App />);
+  return (
+    <main className="min-h-screen flex flex-col p-4">
+      <TicTacToe />
+    </main>
+  );
 }
 ////
