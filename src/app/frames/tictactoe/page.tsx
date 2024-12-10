@@ -3,14 +3,18 @@ import { Metadata } from "next";
 const appUrl = process.env.NEXT_PUBLIC_URL;
 
 const frame = {
-  version: "vNext",
-  image: `${appUrl}/api/frame/tictactoe/image`,
+  version: "next",
+  imageUrl: `${appUrl}/api/frame/tictactoe/image`,
   buttons: [
     {
-      label: "Start Game",
-      action: "post"
+      title: "Start Game",
+      action: {
+        type: "post",
+        url: `${appUrl}/api/frame/tictactoe`
+      }
     }
   ],
+  postUrl: `${appUrl}/api/frame/tictactoe`,
   state: {
     gameStarted: false,
     board: Array(9).fill(null),
@@ -36,4 +40,4 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function TicTacToePage() {
   return null; // The frame will be handled by the API routes
-} 
+}
